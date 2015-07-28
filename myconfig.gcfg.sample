@@ -1,0 +1,28 @@
+[Config]
+# knotenalarm uses Nominatim to search OSM data by latitude and longitude.
+# If you are making large numbers of request please include a valid email address.
+# See https://wiki.openstreetmap.org/wiki/Nominatim for further information
+# Email = email@example.com.
+
+# Update interval in [hours]
+# schedule crontab accordingly
+UpdateInterval = 1
+
+# Uncomment for debug, knotenalarm will not tweet then.
+Debug
+
+[Anaconda]
+# create your own twitter app
+# https://apps.twitter.com/
+ConsumerKey = aaaaaaaaaaaaaaaa
+ConsumerSecret = bbbbbbbbbbbbbbb
+AccessToken = 172863123-ajshdkjasdkjahs
+AccessTokenSecret = kasdkajsdl82udkh38hdkay32
+
+[Freifunk]
+# URL to the nodelist.json
+NodelistUrl = https://map.hamburg.freifunk.net/nodelist.json
+
+# URL to the meshviewer
+MapUrl = https://map.hamburg.freifunk.net/
+

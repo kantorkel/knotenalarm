@@ -11,4 +11,5 @@ Dies ist der Freifunk Hamburg [knotenalarm](https://twitter.com/knotenalarm).
 
 1. create an application on twitter https://apps.twitter.com/app/new
 2. edit configfile and `mv myconfig.gcfg.sample myconfig.gcfg`
-3. set up a cronjob `37 * * * * /usr/bin/go run /foo/knotenalarm.go`, don't forget the GOPATH
+3. Use `go build knotenalarm.go` and put the resulting binary in your `$PATH`.
+4. set up a cronjob

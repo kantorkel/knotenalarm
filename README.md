@@ -6,6 +6,7 @@ Dies ist der Freifunk Hamburg [knotenalarm](https://twitter.com/knotenalarm).
 
 * https://github.com/ChimeraCoder/anaconda
 * https://github.com/scalingdata/gcfg
+* [nodelist](https://github.com/ffansbach/nodelist) with `firstcontact` field
 
 ## Installation & Usage
 

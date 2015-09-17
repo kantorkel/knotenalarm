@@ -90,7 +90,6 @@ func main() {
 	var cfg Config
 	var locationName string
 	var nodeList nodelist
-	var nodeAddress address
 
 	check(gcfg.ReadFileInto(&cfg, "myconfig.gcfg"))
 
@@ -112,6 +111,8 @@ func main() {
 			if len(cfg.Config.Email) > 0 {
 				jsonUrl += "&email=" + cfg.Config.Email
 			}
+
+			var nodeAddress address
 			check(LoadJson(jsonUrl, &nodeAddress))
 
 			if nodeAddress.Address.Suburb != "" {

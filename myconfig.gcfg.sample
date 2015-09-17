@@ -4,9 +4,9 @@
 # See https://wiki.openstreetmap.org/wiki/Nominatim for further information
 # Email = email@example.com.
 
-# Update interval in [hours]
+# Update interval in [minutes]
 # schedule crontab accordingly
-UpdateInterval = 1
+UpdateInterval = 60
 
 # Uncomment for debug, knotenalarm will not tweet then.
 Debug

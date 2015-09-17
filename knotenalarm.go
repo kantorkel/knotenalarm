@@ -93,7 +93,7 @@ func main() {
 
 	check(gcfg.ReadFileInto(&cfg, "myconfig.gcfg"))
 
-	now := time.Now().Add(-cfg.Config.UpdateInterval * time.Hour)
+	now := time.Now().Add(-cfg.Config.UpdateInterval * time.Minute)
 
 	anaconda.SetConsumerKey(cfg.Anaconda.ConsumerKey)
 	anaconda.SetConsumerSecret(cfg.Anaconda.ConsumerSecret)

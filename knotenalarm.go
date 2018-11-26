@@ -30,23 +30,62 @@ type Config struct {
 }
 
 type nodelist struct {
-	Nodes []struct {
-		Status struct {
-			Lastcontact  string `json:"lastcontact"`
-			Clients      int    `json:"clients"`
-			Firstcontact string `json:"firstcontact"`
-			Online       bool   `json:"online"`
-		} `json:"status"`
-		Position struct {
-			Lat  float64 `json:"lat"`
-			Long float64 `json:"long"`
-		} `json:"position"`
-		ID   string `json:"id"`
-		Name string `json:"name"`
+	Version int `json:"version"`
+	Nodes   []struct {
+		Nodeinfo struct {
+			System struct {
+				SiteCode string `json:"site_code"`
+			} `json:"system"`
+			Vpn      bool   `json:"vpn"`
+			Hostname string `json:"hostname"`
+			Software struct {
+				BatmanAdv struct {
+					Version string `json:"version"`
+				} `json:"batman-adv"`
+				Fastd struct {
+					Enabled bool   `json:"enabled"`
+					Version string `json:"version"`
+				} `json:"fastd"`
+				Firmware struct {
+					Release string `json:"release"`
+					Base    string `json:"base"`
+				} `json:"firmware"`
+			} `json:"software"`
+			NodeID   string `json:"node_id"`
+			Hardware struct {
+				Nproc int `json:"nproc"`
+			} `json:"hardware"`
+			Location struct {
+				Latitude float64 `json:"latitude"`
+				Longitude float64 `json:"longitude"`
+			} `json:"location"`
+			Network struct {
+				Mac       string   `json:"mac"`
+				Addresses []string `json:"addresses"`
+				Mesh      struct {
+					BatHhwest struct {
+						Interfaces struct {
+							Tunnel []string `json:"tunnel"`
+						} `json:"interfaces"`
+					} `json:"bat-hhwest"`
+				} `json:"mesh"`
+			} `json:"network"`
+		} `json:"nodeinfo"`
+		Flags struct {
+			Online bool `json:"online"`
+		} `json:"flags"`
+		Statistics struct {
+			Uptime      float64 `json:"uptime"`
+			MemoryUsage float64 `json:"memory_usage"`
+			Clients     int     `json:"clients"`
+			Loadavg     float64 `json:"loadavg"`
+		} `json:"statistics"`
+		Lastseen  time.Time `json:"lastseen"`
+		Firstseen time.Time `json:"firstseen"`
 	} `json:"nodes"`
-	Version   string `json:"version"`
-	UpdatedAt string `json:"updated_at"`
+	Timestamp time.Time `json:"timestamp"`
 }
+
 
 type address struct {
 	PlaceID     string `json:"place_id"`
@@ -102,11 +141,10 @@ func main() {
 	check(LoadJson(cfg.Freifunk.NodelistUrl, &nodeList))
 
 	for i := range nodeList.Nodes {
-		t, err := time.Parse("2006-01-02T15:04:05", nodeList.Nodes[i].Status.Firstcontact)
-		check(err)
+		t := nodeList.Nodes[i].Firstseen
 
-		if t.After(now) && nodeList.Nodes[i].Position.Lat != 0 {
-			jsonUrl := "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + strconv.FormatFloat(nodeList.Nodes[i].Position.Lat, 'f', 5, 64) + "&lon=" + strconv.FormatFloat(nodeList.Nodes[i].Position.Long, 'f', 5, 64) + "&zoom=16&addressdetails=1"
+		if t.After(now) && nodeList.Nodes[i].Nodeinfo.Location.Latitude != 0 {
+			jsonUrl := "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + strconv.FormatFloat(nodeList.Nodes[i].Nodeinfo.Location.Latitude, 'f', 5, 64) + "&lon=" + strconv.FormatFloat(nodeList.Nodes[i].Nodeinfo.Location.Longitude, 'f', 5, 64) + "&zoom=16&addressdetails=1"
 
 			if len(cfg.Config.Email) > 0 {
 				jsonUrl += "&email=" + cfg.Config.Email
@@ -130,9 +168,9 @@ func main() {
 			}
 
 			if cfg.Config.Debug {
-				fmt.Println(locationName + " " + nodeList.Nodes[i].Name + " " + cfg.Freifunk.MapUrl + "#!v:m;n:" + nodeList.Nodes[i].ID)
+				fmt.Println(locationName + " " + nodeList.Nodes[i].Nodeinfo.Hostname + " " + cfg.Freifunk.MapUrl + "#!v:m;n:" + nodeList.Nodes[i].Nodeinfo.NodeID)
 			} else {
-				update, err := api.PostTweet("In "+locationName+" gibt es einen neuen #Freifunk-Knoten: "+nodeList.Nodes[i].Name+" "+cfg.Freifunk.MapUrl+"#!v:m;n:"+nodeList.Nodes[i].ID, nil)
+				update, err := api.PostTweet("In "+locationName+" gibt es einen neuen #Freifunk-Knoten: "+nodeList.Nodes[i].Nodeinfo.Hostname+" "+cfg.Freifunk.MapUrl+"#!v:m;n:"+nodeList.Nodes[i].Nodeinfo.NodeID, nil)
 				check(err)
 				fmt.Println(update)
 			}
